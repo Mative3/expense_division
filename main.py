@@ -54,15 +54,16 @@ def get():
                         textInput.name = "nombre_" + i;
                         textInput.placeholder = "Nombre " + i;
                         textInput.style.marginRight = "10px";
+                        textInput.style.marginLeft = "50px";
                         textInput.style.padding = "5px";
-                        textInput.style.width = "15%";
+                        textInput.style.width = "30%";
                         
                         const numberInput = document.createElement("input");
                         numberInput.type = "real";
                         numberInput.name = "monto_" + i;
                         numberInput.placeholder = "Monto";
                         numberInput.style.padding = "5px";
-                        numberInput.style.width = "15%";
+                        numberInput.style.width = "30%";
                         
                         div.appendChild(textInput);
                         div.appendChild(numberInput);
@@ -161,12 +162,15 @@ async def calcular_resultados(request: Request):
                 values[j] = 0
                 j += 1
             else:
-                string4 = "{} debe transferir ${:.2f} a {}.".format(names[j],abs(values[k]),names[k])
-                resultados.append(string4)
-                values[j] += abs(values[k])
-                values[k] = 0
-                k += 1
-   
+                if abs(values[j].item()) > 1e-3:
+                    string4 = "{} debe transferir ${:.2f} a {}.".format(names[j],abs(values[k]),names[k])
+                    resultados.append(string4)
+                    values[j] += abs(values[k])
+                    values[k] = 0
+                    k += 1
+                else:
+                    break
+ 
     return HTMLResponse(content=f"""
         <html>
             <head>
